@@ -67,6 +67,20 @@ const server = http.createServer((req, res) => {
       if (urlParts.length === 3 && roomId) {
         if (roomId == player.currentRoom.id) {
           const room = player.currentRoom;
+
+          const htmlFile = fs.readFileSync('./views/room.html', 'utf-8');
+          let reqBody = htmlFile
+            .replace(/#{roomName}/g, room.name)
+            .replace(/#{roomItems}/g, room.itemsToString())
+            .replace(/#{inventory}/g, player.inventoryToString())
+            .replace(/#{exits}/g, room.exitsToString());
+          
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/html');
+            res.write(reqBody);
+            return res.end();
+        } else {
+          return redirectTo(`/rooms/${player.currentRoom.id}`);
         }
       }
     }
