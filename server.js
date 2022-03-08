@@ -58,9 +58,18 @@ const server = http.createServer((req, res) => {
       return redirectTo('/');
     }
 
-
-
     // Phase 3: GET /rooms/:roomId
+
+    if (req.method === 'GET' && req.url.startsWith('/rooms')) {
+      const urlParts = req.url.split('/');
+      console.log(urlParts);
+      const roomId = urlParts[2];
+      if (urlParts.length === 3 && roomId) {
+        if (roomId == player.currentRoom.id) {
+          const room = player.currentRoom;
+        }
+      }
+    }
 
     // Phase 4: GET /rooms/:roomId/:direction
 
@@ -69,7 +78,6 @@ const server = http.createServer((req, res) => {
     // Phase 6: Redirect if no matching route handlers
   })
 });
-
 const port = 5000;
 
 server.listen(port, () => console.log('Server is listening on port', port));
