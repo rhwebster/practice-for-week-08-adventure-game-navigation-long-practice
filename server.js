@@ -137,8 +137,11 @@ const server = http.createServer((req, res) => {
     }
 
     // Phase 6: Redirect if no matching route handlers
+
+    return redirectTo(`/rooms/${player.currentRoom.id}`);
   })
 });
+
 const port = 5000;
 
 server.listen(port, () => console.log('Server is listening on port', port));
