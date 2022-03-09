@@ -87,6 +87,24 @@ const server = http.createServer((req, res) => {
 
     // Phase 4: GET /rooms/:roomId/:direction
 
+    if (req.method === 'GET' && req.url.startsWith('/rooms')) {
+      const urlParts = req.url.split('/');
+      const roomId = urlParts[2];
+      const direction = urlParts[3];
+      if (urlParts.length === 4 && roomId && direction) {
+        if (roomId == player.currentRoom.id) {
+          try {
+            const nextRoom = player.move(direction[0]);
+            return redirectTo(`/rooms/${nextRoom.id}`);
+          } catch (error) {
+            return redirectTo(`/rooms/${roomId}`);
+          }
+        } else {
+          redirectTo(`/rooms/${player.currentRoom.id}`);
+        }
+      }
+    }
+
     // Phase 5: POST /items/:itemId/:action
 
     // Phase 6: Redirect if no matching route handlers
