@@ -107,6 +107,35 @@ const server = http.createServer((req, res) => {
 
     // Phase 5: POST /items/:itemId/:action
 
+    if (req.method === 'POST' && req.url.startsWith('/items')) {
+      const urlParts = req.url.split('/');
+      const itemId = urlParts[2];
+      const action = urlParts[3];
+      if (urlParts.length === 4 && itemId && action) {
+        try {
+          switch(action) {
+            case 'eat':
+              player.eatItem(Number(itemId));
+              break;
+            case 'take':
+              player.takeItem(Number(itemId));
+              break;
+            case 'drop':
+              player.dropItem(Number(itemId));
+              break;
+            default:
+              throw new Error('Cannot perform that action');
+          }
+        } catch (e) {
+          res.statusCode = 404;
+          res.write(renderError(e.message));
+          res.end();
+          return;
+        }
+      }
+      return redirectTo(`/rooms/${player.currentRoom.id}`);
+    }
+
     // Phase 6: Redirect if no matching route handlers
   })
 });
